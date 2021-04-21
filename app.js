@@ -5,6 +5,9 @@ const path = require("path");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
+const helmet = require("helmet");
+const hpp = require("hpp");
+const RedisStore = require("connect-redis")(session);
 require("dotenv").config();
 
 const pageRouter = require("./routes/page");
@@ -13,6 +16,7 @@ const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const passportConfig = require("./passport");
 const { sequelize } = require("./models");
+const logger = require("./logger");
 
 const app = express();
 sequelize.sync();
@@ -22,7 +26,17 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 app.set("port", process.env.PORT || 8001);
 
-app.use(morgan("dev"));
+/*
+  When need to publish this server, set the morgan middleware combined instead of dev
+ */
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined"));
+  app.use(helmet());
+  app.use(hpp());
+} else {
+  app.use(morgan("dev"));
+}
+
 /* 
   To serve static files such as images, CSS files, and JavaScript files, use the express.static built in middleware function in Express.
   To create a virtual path prepix(where the path does not actually exist in the file system) 
@@ -45,18 +59,32 @@ app.use(express.urlencoded({ extended: false }));
   If cookie is signed, when client amend cookie, then error happens
 */
 app.use(cookieParser(process.env.COOKIE_SECRET));
+const sessionOption = {
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+  store: new RedisStore({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    pass: process.env.REDIS_PASSWORD,
+    logErrors: true,
+  }),
+};
 
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-  })
-);
+/*
+  When need to publish, set proxy true and set cookie.secure true
+  proxy === true need when a few servers before node server 
+  cookie.secure also needed when applying https and load-balancing
+*/
+if (process.env.NODE_ENV === "production") {
+  sessionOption.proxy = true;
+  // sessionOption.cookie.secure = true;
+}
+app.use(session(sessionOption));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -69,6 +97,7 @@ app.use("/user", userRouter);
 app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;
+  logger.error(err.message);
   next(err);
 });
 

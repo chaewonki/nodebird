@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: true,
       paranoid: true,
+      /**
+       * To use Hanguel
+       */
+      charset: "utf8",
+      collate: "utf8_general_ci",
     }
   );
 };
