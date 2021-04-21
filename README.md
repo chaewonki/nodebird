@@ -1,9 +1,9 @@
 # nodebird
+
 social media like twitter in nodejs-book by zerocho
 
 DONE
 Rnning Server in AWS
-
 
 TODO
 Running Server GCP
