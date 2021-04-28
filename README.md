@@ -1,17 +1,16 @@
 # nodebird
 
-social media like twitter in nodejs-book by zerocho
+### social media like twitter with Express / Nodejs
+ 
+##### Complete in running Server in AWS LightSail
+###### Ubuntu 18.04 LTS
 
-DONE  
-Rnning Server in AWS
-
-TODO  
-Running Server GCP
-Serverless -> 1 . AWS S3 / AWS Lambda / Google Cloud Storage / Google Cloud Functions
-
-Fetures will be added
-
-- Unfollow
-- Profile change
-- Like and Cancel the Like
-- Delete a post
+* Database -> Mysql / Sequelize
+* Login using with passport(local, kakao)
+* Image upload with multer
+* Publishing App
+  + cross-env
+  + pm2
+  + winson / helmet / hpp
+  + redis
+  
