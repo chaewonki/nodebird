@@ -18,6 +18,7 @@ router.get("/join", isNotLoggedIn, (req, res) => {
 
 router.get("/", (req, res, next) => {
   Post.findAll({
+    // when need data associated with a particular model which isn't in the model's table directly.
     include: {
       model: User,
       attributes: ["id", "nick"],

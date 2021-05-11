@@ -14,8 +14,10 @@ const pageRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
+
 const passportConfig = require("./passport");
 const { sequelize } = require("./models");
+
 const logger = require("./logger");
 
 const app = express();
@@ -26,9 +28,6 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 app.set("port", process.env.PORT || 8001);
 
-/*
-  When need to publish this server, set the morgan middleware combined instead of dev
- */
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));
   app.use(helmet());
@@ -37,11 +36,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(morgan("dev"));
 }
 
-/* 
-  To serve static files such as images, CSS files, and JavaScript files, use the express.static built in middleware function in Express.
-  To create a virtual path prepix(where the path does not actually exist in the file system) 
-  for the files that are served by the expess.ststic function specify a mount path for the static directroy
-*/
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/img", express.static(path.join(__dirname, "uploads")));
 
