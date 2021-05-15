@@ -55,6 +55,8 @@ block content
         xhr.send(formData);
       });
     }
+
+    // follow script
     document.querySelectorAll('.twit-follow').forEach(function (tag) {
       tag.addEventListener('click', function () {
         var isLoggedIn = document.querySelector('#my-id');
@@ -77,4 +79,5 @@ block content
           }
         }
       });
-    });
+    });  
+

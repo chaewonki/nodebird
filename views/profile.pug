@@ -2,13 +2,45 @@ extends layout
 
 block content
   .timeline
+    input#my-id(type='hidden' value=user.id)
     .followings.half
       h2 팔로잉 목록
       if user.Followings
         for following in user.Followings
-          div= following.nick
+          .following
+            input#unfollow-id(type='hidden' value=following.id)
+            div.following-nick= following.nick
+            button.btn-unfollow 언팔로우 
     .followers.half
       h2 팔로워 목록
       if user.Followers
         for follower in user.Followers
           div= follower.nick
+  script.
+    document.querySelectorAll('.btn-unfollow').forEach(function (tag) {
+      tag.addEventListener('click', function () {
+        var isLoggedIn = document.querySelector('#my-id');
+        if (isLoggedIn) {
+          var userId = tag.parentNode.querySelector('#unfollow-id').value;
+          var myId = isLoggedIn.value;
+          //- console.log("Follower ID : ", myId);
+          //- console.log("Following ID : ", userId);
+          if (userId !== myId) {
+            if (confirm('언팔로우 하시겠습니까?')) {
+              var xhr = new XMLHttpRequest();
+              xhr.onload = function () {
+                if (xhr.status === 200) {
+                  location.reload();
+                } else {
+                  console.error(xhr.responseText);
+                }
+              };
+              xhr.open('POST', '/user/' + userId + '/unfollow');
+              xhr.send();
+            }
+          }
+        }
+      });
+    });
+   
+
