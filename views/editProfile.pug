@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  .timeline
+    form#join-form(action='/user/editProfile' method='post')
+      .input-group
+        label(for='editProfile-email') 이메일
+        input#editProfile-email(type='email' name='email' value=user.email)
+      .input-group
+        label(for='editProfile-nick') 닉네임
+        input#editProfile-nick(type='text' name='nick' value=user.nick)
+      button.btn(type='submit') 프로필 수정
+
+        

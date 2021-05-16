@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 
 const { isLoggedIn } = require("./middlewares");
 const { User } = require("../models");
@@ -23,6 +24,38 @@ router.post("/:id/unfollow", isLoggedIn, async (req, res, next) => {
     // console.log("Following ID : ", req.params.id);
     await user.removeFollowing(parseInt(req.params.id, 10));
     res.send("success");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// Edit Profile , ChangePassword
+
+router.get("/editProfile", isLoggedIn, (req, res) => {
+  res.render("editProfile", { title: "프로필 수정", user: req.user });
+});
+
+router.post("/editProfile", isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    const {
+      body: { nick, email },
+    } = req;
+    user.update({ email: email, nick: nick });
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/changePassword", isLoggedIn, (req, res) => {
+  res.render("changePassword", { title: "비밀번호 변경", user: req.user });
+});
+
+router.post("/changePassword", isLoggedIn, async (req, res, next) => {
+  try {
   } catch (error) {
     console.error(error);
     next(error);

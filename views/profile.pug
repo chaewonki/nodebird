@@ -2,6 +2,11 @@ extends layout
 
 block content
   .timeline
+    .edit-profile
+      a(href='user/editProfile')
+        button.btn 프로필 변경
+      a(href="user/changePassword")
+        button.btn 비밀번호 변경
     input#my-id(type='hidden' value=user.id)
     .followings.half
       h2 팔로잉 목록
