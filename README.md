@@ -20,6 +20,6 @@
 ##### TODO
 
 - Unfollow [ O ]
-- Edit Profile [ X ]
+- Edit Profile [ O ]
 - Like and Cancel the Like [ X ]
 - Delete post [ X ]
